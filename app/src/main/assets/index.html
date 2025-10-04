@@ -1,0 +1,21 @@
+<!doctype html><html><head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>To-Do Offline</title>
+<style>
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:16px}
+h1{font-size:20px} input,button{font-size:16px;padding:10px}
+ul{list-style:none;padding:0} li{display:flex;gap:8px;align-items:center;padding:6px 0}
+.done{text-decoration:line-through;opacity:.6}
+</style>
+</head><body>
+<h1>My To‑Do (Offline)</h1>
+<div><input id="newItem" placeholder="Add a task…"/><button id="addBtn">Add</button></div>
+<ul id="list"></ul>
+<script>
+const KEY="todooffline.items";const list=document.getElementById("list");const input=document.getElementById("newItem");const addBtn=document.getElementById("addBtn");let items=JSON.parse(localStorage.getItem(KEY)||"[]");
+function save(){localStorage.setItem(KEY,JSON.stringify(items));}
+function render(){list.innerHTML="";items.forEach((it,idx)=>{const li=document.createElement("li");const c=document.createElement("input");c.type="checkbox";c.checked=it.done;c.onchange=()=>{it.done=c.checked;save();render()};const s=document.createElement("span");s.textContent=it.text;if(it.done)s.className="done";const d=document.createElement("button");d.textContent="Delete";d.onclick=()=>{items.splice(idx,1);save();render()};li.append(c,s,d);list.appendChild(li);});}
+addBtn.onclick=()=>{const t=input.value.trim();if(!t)return;items.push({text:t,done:false});input.value="";save();render();};render();
+</script>
+</body></html>
